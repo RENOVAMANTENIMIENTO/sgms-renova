@@ -857,12 +857,11 @@ export default function CotizacionOficialPage() {
                         }
                       </p>
 
-                      <span className="rounded-full bg-[#F4E6AF] px-3 py-1 text-xs capitalize">
-                        {
-                          quote.data
-                            .aceptacionCliente
-                        }
-                      </span>
+                     <span className="rounded-full bg-[#F4E6AF] px-3 py-1 text-xs capitalize">
+  {quote.data.estadoCotizacion === 'anticipo_recibido'
+    ? 'Anticipo recibido'
+    : quote.data.aceptacionCliente}
+</span>
                     </div>
 
                     <p className="mt-2 font-medium">
