@@ -112,10 +112,16 @@ type OfficialQuoteData = {
   formaPago: PaymentMethod
 
   aceptacionCliente: 'pendiente' | 'aceptada' | 'rechazada'
-  estadoCotizacion: 'borrador' | 'enviada' | 'aceptada' | 'rechazada'
+  estadoCotizacion:
+  | 'borrador'
+  | 'enviada'
+  | 'aceptada'
+  | 'rechazada'
+  | 'anticipo_recibido'
   creadoPor: string
   fechaCreacion: string
 }
+
 
 type OfficialQuoteRecord = {
   id: string
