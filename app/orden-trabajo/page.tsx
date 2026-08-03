@@ -9,6 +9,7 @@ import {
 } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { Card } from '@/components/ui/Card'
 
 type UserRole = 'supervisor' | 'vendedor' | 'contratista'
 
@@ -797,7 +798,8 @@ export default function OrdenTrabajoPage() {
 
       <div className="mx-auto grid max-w-7xl gap-6 px-5 py-8 lg:px-10 xl:grid-cols-[440px_1fr]">
         {profile?.role !== 'contratista' && (
-          <section className="rounded-2xl bg-white p-6 shadow-sm">
+          <Card>
+
             <h2 className="text-xl font-semibold">
               Emitir orden
             </h2>
@@ -1050,11 +1052,11 @@ export default function OrdenTrabajoPage() {
                   : 'Generar Orden de Trabajo'}
               </button>
             </form>
-          </section>
+          </Card>
         )}
 
-        <section
-          className={`rounded-2xl bg-white p-6 shadow-sm ${
+        <Card
+  className={`${
             profile?.role === 'contratista'
               ? 'xl:col-span-2'
               : ''
@@ -1269,7 +1271,7 @@ export default function OrdenTrabajoPage() {
               ))
             )}
           </div>
-        </section>
+        </Card>
       </div>
     </main>
   )
