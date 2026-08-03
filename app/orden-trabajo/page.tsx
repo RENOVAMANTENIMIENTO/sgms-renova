@@ -10,6 +10,8 @@ import {
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Card } from '@/components/ui/Card'
+import { WorkOrderCard } from '@/components/work-orders/WorkOrderCard'
+
 
 type UserRole = 'supervisor' | 'vendedor' | 'contratista'
 
@@ -1100,177 +1102,18 @@ export default function OrdenTrabajoPage() {
                 </p>
               </div>
             ) : (
-              filteredOrders.map((order) => (
-                <article
-                  key={order.id}
-                  className="rounded-2xl border border-gray-200 p-5"
-                >
-                  <div className="flex flex-col justify-between gap-6 lg:flex-row">
-                    <div className="max-w-2xl">
-                      <div className="flex flex-wrap items-center gap-3">
-                        <h3 className="text-xl font-semibold text-[#0F3D36]">
-                          {order.data.folioOrden}
-                        </h3>
-
-                        <StatusBadge
-                          status={order.data.estadoOrden}
-                        />
-                      </div>
-
-                      <p className="mt-3 text-lg font-semibold">
-                        {order.data.clienteNombre}
-                      </p>
-
-                      <p className="text-sm text-gray-500">
-                        {order.data.tipoServicio}
-                      </p>
-
-                      <div className="mt-4 grid gap-2 text-sm md:grid-cols-2">
-                        <p>
-                          <strong>Servicio:</strong>{' '}
-                          {order.data.folioServicio}
-                        </p>
-
-                        <p>
-                          <strong>Contratista:</strong>{' '}
-                          {order.data.contratistaNombre}
-                        </p>
-
-                        <p>
-                          <strong>Inicio:</strong>{' '}
-                          {order.data.fechaInicio} a las{' '}
-                          {order.data.horaInicio}
-                        </p>
-
-                        <p>
-                          <strong>Término estimado:</strong>{' '}
-                          {order.data.fechaTerminoEstimada}
-                        </p>
-
-                        <p>
-                          <strong>Horario:</strong>{' '}
-                          {order.data.horarioTrabajo}
-                        </p>
-
-                        <p>
-                          <strong>Ayudantes:</strong>{' '}
-                          {order.data.numeroAyudantes}
-                        </p>
-
-                        <p className="md:col-span-2">
-                          <strong>Dirección:</strong>{' '}
-                          {order.data.direccion}
-                        </p>
-                      </div>
-
-                      <div className="mt-5 rounded-xl bg-[#F7F7F5] p-4 text-sm">
-                        <p className="font-semibold text-[#0F3D36]">
-                          Alcance autorizado
-                        </p>
-
-                        <p className="mt-2 whitespace-pre-wrap">
-                          {order.data.alcanceAutorizado}
-                        </p>
-                      </div>
-
-                      {order.data.materialesAutorizados && (
-                        <div className="mt-3 rounded-xl bg-[#F7F7F5] p-4 text-sm">
-                          <p className="font-semibold text-[#0F3D36]">
-                            Materiales autorizados
-                          </p>
-
-                          <p className="mt-2 whitespace-pre-wrap">
-                            {order.data.materialesAutorizados}
-                          </p>
-                        </div>
-                      )}
-
-                      {order.data.instruccionesEspeciales && (
-                        <p className="mt-4 text-sm">
-                          <strong>Instrucciones:</strong>{' '}
-                          {order.data.instruccionesEspeciales}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="min-w-60 space-y-3">
-                      {order.data.whatsapp && (
-                        <a
-                          href={`https://wa.me/52${order.data.whatsapp.replace(/\D/g, '')}`}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="block rounded-lg bg-[#0F3D36] px-3 py-2 text-center text-sm text-white"
-                        >
-                          Contactar cliente
-                        </a>
-                      )}
-
-                      {order.data.ubicacion && (
-                        <a
-                          href={order.data.ubicacion}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="block rounded-lg border border-gray-300 px-3 py-2 text-center text-sm"
-                        >
-                          Abrir ubicación
-                        </a>
-                      )}
-
-                      {profile?.role === 'contratista' &&
-                        order.data.estadoOrden === 'emitida' && (
-                          <button
-                            type="button"
-                            onClick={() => confirmOrder(order)}
-                            className="w-full rounded-lg bg-[#D4AF37] px-3 py-2 text-sm font-semibold"
-                          >
-                            Confirmar orden
-                          </button>
-                        )}
-
-                      {profile?.role === 'contratista' &&
-                        (order.data.estadoOrden === 'emitida' ||
-                          order.data.estadoOrden ===
-                            'confirmada') && (
-                          <button
-                            type="button"
-                            onClick={() => startWork(order)}
-                            className="w-full rounded-lg border border-[#0F3D36] px-3 py-2 text-sm font-medium text-[#0F3D36]"
-                          >
-                            Iniciar trabajo
-                          </button>
-                        )}
-                        {profile?.role === 'contratista' &&
-  order.data.estadoOrden === 'en_proceso' && (
-    <button
-      type="button"
-      onClick={() => finishWork(order)}
-      className="mt-2 w-full rounded-lg bg-[#D4AF37] px-3 py-3 text-sm font-semibold text-black"
-    >
-      Finalizar trabajo
-    </button>
+           filteredOrders.map((order) => (
+  <WorkOrderCard
+  key={order.id}
+  order={order}
+  profile={profile}
+  onConfirm={confirmOrder}
+  onStart={startWork}
+  onFinish={finishWork}
+/>
+))
 )}
-
-                      <div className="rounded-xl bg-[#F7F7F5] p-4 text-sm">
-                        <p className="flex justify-between gap-3">
-                          <span>Anticipo</span>
-                          <strong>
-                            {money(order.data.montoAnticipo)}
-                          </strong>
-                        </p>
-
-                        <p className="mt-2 flex justify-between gap-3">
-                          <span>Saldo</span>
-                          <strong>
-                            {money(order.data.saldoPendiente)}
-                          </strong>
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-              ))
-            )}
-          </div>
+              </div>      
         </Card>
       </div>
     </main>
