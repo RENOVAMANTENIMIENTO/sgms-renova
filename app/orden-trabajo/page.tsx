@@ -11,6 +11,8 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Card } from '@/components/ui/Card'
 import { WorkOrderCard } from '@/components/work-orders/WorkOrderCard'
+import { useWorkOrders } from '@/hooks/useWorkOrders'
+
 
 
 type UserRole = 'supervisor' | 'vendedor' | 'contratista'
@@ -204,6 +206,14 @@ export default function OrdenTrabajoPage() {
 
   const [profile, setProfile] = useState<Profile | null>(null)
   const [userId, setUserId] = useState('')
+  const {
+  confirmOrder: confirmOrderFromHook,
+  startWork: startWorkFromHook,
+  finishWork: finishWorkFromHook,
+} = useWorkOrders({
+  profile,
+  userId,
+})
 
   const [services, setServices] = useState<ServiceRecord[]>([])
   const [officialQuotes, setOfficialQuotes] = useState<
@@ -1107,7 +1117,7 @@ export default function OrdenTrabajoPage() {
   key={order.id}
   order={order}
   profile={profile}
-  onConfirm={confirmOrder}
+  onConfirm={confirmOrderFromHook}
   onStart={startWork}
   onFinish={finishWork}
 />
